@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
+
+<title>Home Hub</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    background: #101827;
+    color: #E8EDF5;
+}
+
+body {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+body:before {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(16, 24, 39, 0.82);
+}
+
+#app {
+    width: 100%;
+    height: 100%;
+    padding: 24px;
+    position: relative;
+}
+
+/* TOP */
+
+.top {
+    display: table;
+    width: 100%;
+}
+
+.top-left,
+.top-right {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.top-right {
+    text-align: right;
+    color: #9BA8BA;
+    font-size: 14px;
+}
+
+.time-small {
+    font-size: 28px;
+    font-weight: 600;
+}
+
+/* GREETING */
+
+.greeting {
+    margin-top: 28px;
+}
+
+.greeting h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.date {
+    margin-top: 6px;
+    color: #9BA8BA;
+    font-size: 16px;
+}
+
+/* WIDGET ROW */
+
+.widget-row {
+    display: table;
+    width: 100%;
+    margin-top: 22px;
+    border-spacing: 10px 0;
+    margin-left: -10px;
+    width: calc(100% + 20px);
+}
+
+.widget {
+    display: table-cell;
+    width: 50%;
+    background: rgba(28, 38, 54, 0.94);
+    border-radius: 18px;
+    padding: 18px;
+    vertical-align: middle;
+}
+
+.widget-label {
+    color: #9BA8BA;
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.widget-value {
+    font-size: 25px;
+    font-weight: 600;
+}
+
+.weather-icon {
+    font-size: 25px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+.location {
+    color: #9BA8BA;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* BUTTONS */
+
+.buttons {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    margin-top: 20px;
+}
+
+.app-button {
+    display: table-cell;
+    text-align: center;
+    text-decoration: none;
+    color: #E8EDF5;
+    padding: 10px 3px;
+}
+
+.app-icon {
+    width: 58px;
+    height: 58px;
+    line-height: 58px;
+    margin: 0 auto 7px auto;
+    border-radius: 18px;
+    background: #1C2636;
+    font-size: 26px;
+}
+
+.app-name {
+    font-size: 12px;
+    color: #9BA8BA;
+}
+
+/* TODAY */
+
+.today {
+    margin-top: 20px;
+    background: rgba(28, 38, 54, 0.94);
+    border-radius: 18px;
+    padding: 18px;
+}
+
+.today-title {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.today-content {
+    margin-top: 12px;
+    color: #9BA8BA;
+    font-size: 14px;
+}
+
+/* FEYENOORD */
+
+.feyenoord {
+    margin-top: 12px;
+    background: rgba(28, 38, 54, 0.94);
+    border-radius: 18px;
+    padding: 16px;
+}
+
+.fey-title {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.fey-info {
+    margin-top: 7px;
+    color: #9BA8BA;
+    font-size: 13px;
+}
+
+/* SETTINGS */
+
+.settings {
+    position: absolute;
+    right: 22px;
+    bottom: 20px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(28, 38, 54, 0.96);
+    text-align: center;
+    line-height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#backgroundInput {
+    display: none;
+}
+
+/* BOTTOM NAV */
+
+.bottom {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 18px;
+    text-align: center;
+    color: #9BA8BA;
+    font-size: 20px;
+    letter-spacing: 18px;
+}
+
+/* SMALL SCREENS */
+
+@media (max-height: 600px) {
+    #app {
+        padding: 16px;
+    }
+
+    .greeting {
+        margin-top: 12px;
+    }
+
+    .greeting h1 {
+        font-size: 24px;
+    }
+
+    .widget-row {
+        margin-top: 12px;
+    }
+
+    .buttons {
+        margin-top: 10px;
+    }
+
+    .today {
+        margin-top: 10px;
+    }
+
+    .feyenoord {
+        margin-top: 8px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div id="app">
+
+    <!-- TOP -->
+    <div class="top">
+        <div class="top-left">
+            <div class="time-small" id="topTime">--:--</div>
+        </div>
+
+        <div class="top-right">
+            🔋
+        </div>
+    </div>
+
+    <!-- GREETING -->
+    <div class="greeting">
+        <h1>Hallo 👋</h1>
+        <div class="date" id="date">Laden...</div>
+    </div>
+
+    <!-- CLOCK + WEATHER -->
+    <div class="widget-row">
+
+        <div class="widget">
+            <div class="widget-label">Tijd</div>
+            <div class="widget-value" id="bigTime">--:--</div>
+        </div>
+
+        <div class="widget">
+            <div class="widget-label">Weer</div>
+
+            <div class="widget-value">
+                <span class="weather-icon" id="weatherIcon">☀️</span>
+                <span id="temperature">--°C</span>
+            </div>
+
+            <div class="location">
+                Nieuwerkerk aan den IJssel
+            </div>
+        </div>
+
+    </div>
+
+    <!-- APPS -->
+    <div class="buttons">
+
+        <a class="app-button"
+           href="https://open.spotify.com/"
+           target="_blank">
+
+            <div class="app-icon">🎵</div>
+            <div class="app-name">Spotify</div>
+
+        </a>
+
+        <a class="app-button"
+           href="https://www.icloud.com/calendar/"
+           target="_blank">
+
+            <div class="app-icon">📅</div>
+            <div class="app-name">Kalender</div>
+
+        </a>
+
+        <a class="app-button"
+           href="https://www.google.com/search?q=Feyenoord+volgende+wedstrijd"
+           target="_blank">
+
+            <div class="app-icon">⚽</div>
+            <div class="app-name">Feyenoord</div>
+
+        </a>
+
+    </div>
+
+    <!-- TODAY -->
+    <div class="today">
+
+        <div class="today-title">
+            📅 Vandaag
+        </div>
+
+        <div class="today-content" id="todayText">
+            Geen afspraken ingesteld
+        </div>
+
+    </div>
+
+    <!-- FEYENOORD -->
+    <div class="feyenoord">
+
+        <div class="fey-title">
+            ⚽ Feyenoord
+        </div>
+
+        <div class="fey-info">
+            Bekijk de volgende wedstrijd
+            via de knop hierboven.
+        </div>
+
+    </div>
+
+    <!-- SETTINGS -->
+    <label class="settings" for="backgroundInput">
+        ⚙️
+    </label>
+
+    <input
+        id="backgroundInput"
+        type="file"
+        accept="image/*"
+    >
+
+</div>
+
+
+<script>
+
+/* =========================================
+   CLOCK
+========================================= */
+
+function updateClock() {
+
+    var now = new Date();
+
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+
+    if (hours < 10) {
+        hours = "0" + hours;
+    }
+
+    if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+
+    var time = hours + ":" + minutes;
+
+    document.getElementById("topTime").innerHTML = time;
+    document.getElementById("bigTime").innerHTML = time;
+
+    var days = [
+        "Zondag",
+        "Maandag",
+        "Dinsdag",
+        "Woensdag",
+        "Donderdag",
+        "Vrijdag",
+        "Zaterdag"
+    ];
+
+    var months = [
+        "januari",
+        "februari",
+        "maart",
+        "april",
+        "mei",
+        "juni",
+        "juli",
+        "augustus",
+        "september",
+        "oktober",
+        "november",
+        "december"
+    ];
+
+    var dateText =
+        days[now.getDay()] + " " +
+        now.getDate() + " " +
+        months[now.getMonth()];
+
+    document.getElementById("date").innerHTML = dateText;
+}
+
+updateClock();
+
+setInterval(updateClock, 1000);
+
+
+/* =========================================
+   WEATHER
+   Nieuwerkerk aan den IJssel
+========================================= */
+
+function weatherIcon(code) {
+
+    if (code === 0) {
+        return "☀️";
+    }
+
+    if (code === 1 || code === 2) {
+        return "🌤️";
+    }
+
+    if (code === 3) {
+        return "☁️";
+    }
+
+    if (code >= 45 && code <= 48) {
+        return "🌫️";
+    }
+
+    if (code >= 51 && code <= 67) {
+        return "🌧️";
+    }
+
+    if (code >= 71 && code <= 77) {
+        return "❄️";
+    }
+
+    if (code >= 80 && code <= 82) {
+        return "🌦️";
+    }
+
+    if (code >= 95) {
+        return "⛈️";
+    }
+
+    return "🌤️";
+}
+
+
+function loadWeather() {
+
+    var url =
+        "https://api.open-meteo.com/v1/forecast" +
+        "?latitude=51.9647" +
+        "&longitude=4.6108" +
+        "&current=temperature_2m,weather_code" +
+        "&timezone=Europe%2FAmsterdam";
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.open("GET", url, true);
+
+    xhr.onreadystatechange = function() {
+
+        if (xhr.readyState !== 4) {
+            return;
+        }
+
+        if (xhr.status >= 200 && xhr.status < 300) {
+
+            try {
+
+                var data = JSON.parse(xhr.responseText);
+
+                var temp =
+                    Math.round(data.current.temperature_2m);
+
+                var code =
+                    data.current.weather_code;
+
+                document.getElementById(
+                    "temperature"
+                ).innerHTML = temp + "°C";
+
+                document.getElementById(
+                    "weatherIcon"
+                ).innerHTML = weatherIcon(code);
+
+            } catch (e) {
+
+                document.getElementById(
+                    "temperature"
+                ).innerHTML = "--°C";
+
+            }
+
+        }
+    };
+
+    xhr.send();
+}
+
+loadWeather();
+
+/* Update weather every 10 minutes */
+setInterval(loadWeather, 600000);
+
+
+/* =========================================
+   BACKGROUND IMAGE
+========================================= */
+
+var backgroundInput =
+    document.getElementById("backgroundInput");
+
+
+backgroundInput.onchange = function(event) {
+
+    var file = event.target.files[0];
+
+    if (!file) {
+        return;
+    }
+
+    var reader = new FileReader();
+
+    reader.onload = function(e) {
+
+        var image = e.target.result;
+
+        document.body.style.backgroundImage =
+            "url('" + image + "')";
+
+        try {
+            localStorage.setItem(
+                "homeHubBackground",
+                image
+            );
+        } catch (error) {
+            /* Old Safari may reject large images */
+        }
+    };
+
+    reader.readAsDataURL(file);
+};
+
+
+/* Load saved background */
+
+try {
+
+    var savedBackground =
+        localStorage.getItem(
+            "homeHubBackground"
+        );
+
+    if (savedBackground) {
+
+        document.body.style.backgroundImage =
+            "url('" + savedBackground + "')";
+
+    }
+
+} catch (error) {
+    /* Ignore storage errors */
+}
+
+
+/* =========================================
+   PREVENT ACCIDENTAL ZOOM
+========================================= */
+
+document.addEventListener(
+    "gesturestart",
+    function(e) {
+        e.preventDefault();
+    },
+    false
+);
+
+</script>
+
+</body>
+</html>
